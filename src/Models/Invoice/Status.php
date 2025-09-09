@@ -266,7 +266,7 @@ class Status implements ModelInterface
             }, $data['cancelList'] ?? []),
             array_map(function ($splitListItem): SplitListItem {
                 return SplitListItem::fromArray($splitListItem);
-            }, $data['splitList'] ?? null)
+            }, $data['splitList'] ?? [])
         );
     }
 }
