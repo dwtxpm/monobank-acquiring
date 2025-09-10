@@ -5,6 +5,7 @@ namespace Maksa988\MonobankAcquiring\Models\Invoice;
 use Maksa988\MonobankAcquiring\Models\CancelListItem;
 use Maksa988\MonobankAcquiring\Models\ModelInterface;
 use Maksa988\MonobankAcquiring\Models\SplitListItem;
+use Maksa988\MonobankAcquiring\Models\WalletData;
 use Maksa988\MonobankAcquiring\MonobankAcquiring;
 
 class Status implements ModelInterface
@@ -73,17 +74,23 @@ class Status implements ModelInterface
     protected $splitList = [];
 
     /**
-     * @param string      $invoiceId
-     * @param string      $status
-     * @param int         $amount
-     * @param int         $ccy
-     * @param int         $finalAmount
-     * @param string|null $reference
-     * @param string|null $createdDate
-     * @param string|null $modifiedDate
-     * @param string|null $failureReason
-     * @param array       $cancelList
-     * @param array       $splitList
+     * @var null|WalletData
+     */
+    protected $walletData;
+
+    /**
+     * @param string            $invoiceId
+     * @param string            $status
+     * @param int               $amount
+     * @param int               $ccy
+     * @param int               $finalAmount
+     * @param string|null       $reference
+     * @param string|null       $createdDate
+     * @param string|null       $modifiedDate
+     * @param string|null       $failureReason
+     * @param array             $cancelList
+     * @param array             $splitList
+     * @param WalletData|null   $walletData
      */
     public function __construct(
         string $invoiceId,
@@ -96,7 +103,8 @@ class Status implements ModelInterface
         ?string $modifiedDate = null,
         ?string $failureReason = null,
         array $cancelList = [],
-        array $splitList = []
+        array $splitList = [],
+        ?WalletData $walletData
     ) {
         $this->invoiceId = $invoiceId;
         $this->status = $status;
@@ -109,6 +117,7 @@ class Status implements ModelInterface
         $this->failureReason = $failureReason;
         $this->cancelList = $cancelList;
         $this->splitList = $splitList;
+        $this->walletData = $walletData;
     }
 
     /**
@@ -216,6 +225,14 @@ class Status implements ModelInterface
     }
 
     /**
+     * @return null|WalletData
+     */
+    public function getWalletData(): null|WalletData
+    {
+        return $this->walletData;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array
@@ -239,6 +256,8 @@ class Status implements ModelInterface
             "splitList" => array_map(function (SplitListItem $splitListItem): array {
                 return $splitListItem->toArray();
             }, $this->getSplitList()),
+
+            "walletData" => $this->getWalletData()?->toArray() ?? [],
         ];
     }
 
@@ -266,7 +285,8 @@ class Status implements ModelInterface
             }, $data['cancelList'] ?? []),
             array_map(function ($splitListItem): SplitListItem {
                 return SplitListItem::fromArray($splitListItem);
-            }, $data['splitList'] ?? null)
+            }, $data['splitList'] ?? null),
+            !empty($data['walletData']) ? WalletData::fromArray($data['walletData']) : null,
         );
     }
 }

@@ -7,6 +7,10 @@ use Maksa988\MonobankAcquiring\Responses\Wallet\PaymentResponse;
 
 class PaymentRequest implements RequestInterface
 {
+
+    const INITIATION_KIND_MERCHANT = 'merchant';
+    const INITIATION_KIND_CLIENT = 'client';
+
     /**
      * @var string
      */
@@ -23,9 +27,9 @@ class PaymentRequest implements RequestInterface
     public $ccy;
 
     /**
-     * @var bool
+     * @var string
      */
-    public $tds = true;
+    public $initiationKind;
 
     /**
      * @var string
@@ -42,7 +46,7 @@ class PaymentRequest implements RequestInterface
      * @param int         $amount
      * @param string      $redirectUrl
      * @param int         $ccy
-     * @param bool        $tds
+     * @param string      $initiationKind
      * @param string|null $webHookUrl
      */
     public function __construct(
@@ -50,14 +54,14 @@ class PaymentRequest implements RequestInterface
         int $amount,
         string $redirectUrl,
         int $ccy = 980,
-        bool $tds = true,
+        string $initiationKind = self::INITIATION_KIND_MERCHANT,
         string $webHookUrl = null
     ) {
         $this->cardToken = $cardToken;
         $this->amount = $amount;
         $this->redirectUrl = $redirectUrl;
         $this->ccy = $ccy;
-        $this->tds = $tds;
+        $this->initiationKind = $initiationKind;
         $this->webHookUrl = $webHookUrl;
     }
 
@@ -70,7 +74,7 @@ class PaymentRequest implements RequestInterface
             "cardToken" => $this->cardToken,
             "amount" => $this->amount,
             "ccy" => $this->ccy,
-            "tds" => $this->tds,
+            "initiationKind" => $this->initiationKind,
             "redirectUrl" => $this->redirectUrl,
             "webHookUrl" => $this->webHookUrl,
         ];
