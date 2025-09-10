@@ -3,6 +3,7 @@
 namespace Maksa988\MonobankAcquiring\Requests\Invoice;
 
 use Maksa988\MonobankAcquiring\Models\MerchantPaymInfo;
+use Maksa988\MonobankAcquiring\Models\SaveCardData;
 use Maksa988\MonobankAcquiring\Requests\RequestInterface;
 use Maksa988\MonobankAcquiring\Responses\Invoice\CreateResponse;
 
@@ -52,6 +53,11 @@ class CreateRequest implements RequestInterface
     protected $qrId = "";
 
     /**
+     * @var SaveCardData|null
+     */
+    protected $saveCardData;
+
+    /**
      * Create constructor.
      * @param int $amount
      * @param MerchantPaymInfo|null $merchantPaymInfo
@@ -61,6 +67,7 @@ class CreateRequest implements RequestInterface
      * @param int|null $validity
      * @param string|null $paymentType
      * @param string|null $qrId
+     * @param SaveCardData|null $saveCardData
      */
     public function __construct(
         int $amount,
@@ -70,7 +77,8 @@ class CreateRequest implements RequestInterface
         ?int $ccy = null,
         ?int $validity = null,
         ?string $paymentType = null,
-        ?string $qrId = null
+        ?string $qrId = null,
+        ?SaveCardData $saveCardData = null
     ) {
         $this->amount = $amount;
         $this->merchantPaymInfo = $merchantPaymInfo;
@@ -80,6 +88,7 @@ class CreateRequest implements RequestInterface
         $this->validity = $validity;
         $this->paymentType = $paymentType;
         $this->qrId = $qrId;
+        $this->saveCardData = $saveCardData;
     }
 
     /**
@@ -96,6 +105,7 @@ class CreateRequest implements RequestInterface
             'validity' => $this->validity,
             'paymentType' => $this->paymentType,
             'qrId' => $this->qrId,
+            'saveCardData' => $this->saveCardData ? $this->saveCardData->toArray() : []
         ];
     }
 
