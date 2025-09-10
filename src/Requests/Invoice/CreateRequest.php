@@ -105,7 +105,7 @@ class CreateRequest implements RequestInterface
             'validity' => $this->validity,
             'paymentType' => $this->paymentType,
             'qrId' => $this->qrId,
-            'saveCardData' => $this->saveCardData ? $this->saveCardData->toArray() : []
+            'saveCardData' => $this->saveCardData?->toArray() ?: new SaveCardData(false, ''),
         ];
     }
 
